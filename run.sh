@@ -1,0 +1,1 @@
+./bin/console parse /var/www/tests/click/src/TestData

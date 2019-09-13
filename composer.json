@@ -1,0 +1,22 @@
+{
+    "name": "click/csv",
+    "description": "CSV parse",
+    "type": "project",
+    "license": "gpl",
+    "authors": [
+        {
+            "name": "Eldar",
+            "email": "eldar.urazaliev@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/console": "^4.3",
+        "symfony/finder": "^4.3"
+    },
+    "autoload": {
+         "psr-4": {
+             "Console\\": "src"
+         },
+         "classmap": ["src"]
+     }
+}

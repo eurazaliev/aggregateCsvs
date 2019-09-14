@@ -10,11 +10,13 @@ use Symfony\Component\Finder\Finder;
 
 use App\Config\MainConfig as MainConfig;
 use Console\App\Helper\FilesIterator;
-use Console\App\Helper\FilesProcessor;
+use Console\App\Helper\CsvFilesAggregator;
+use Console\App\Helper\Processor;
+
  
 class ParseCommand extends Command
 {
-    
+
     protected function configure()
     {
         $this->setName('parse')
@@ -23,7 +25,7 @@ class ParseCommand extends Command
             ->addArgument(
                     'path', 
                     InputArgument::REQUIRED, 
-                    'Please set the path where files stored'
+                    'Please set the path where the files stored'
                 );
     }
 
@@ -36,13 +38,26 @@ class ParseCommand extends Command
         
         $output->writeln('Ready to parse files in the: ' . $path);
 
-        $finder = new Finder();
-        $filesProcessor  = new FilesProcessor($path, $finder);
-        $filesProcessor->setFileNameMask($fileNameMask);
-        $filesProcessor->setCsvFileCaption($csvFileCaption);
-        
-        $result = $filesProcessor->process(); //->getResult();
-        
+        /** делаем в два этапа. вначале исходные файлы разбираем построчно и из строк
+          * формируем предварительные файлы, содержащие данные на определенную дату **/
+        try {
+            $csvFilesAggregator  = new CsvFilesAggregator($path, new Finder, new FilesIterator);
+        }
+        catch (Exception $ex) {
+                $output->writeln('There was a problem to read source files or 
+                write aggregated data. Please check directories or permissions', $ex->getMessage());
+        }
+        $csvFilesAggregator->setFileNameMask($fileNameMask)
+                           ->setCsvFileCaption($csvFileCaption)
+                           ->aggregateDatas();
+
+
+        /** вторым этапом сгенерированные ранее файлы разбираем построчно и аггрегируем 
+          * содержащиеся в них данные в выходной файл **/
+        $resultProcessor  = new Processor($path, new Finder(), new FilesIterator);
+        $resultProcessor->setCsvFileCaption($csvFileCaption);
+                        ->processResult();
+
         $output->writeln('Complete.');
     }
 }

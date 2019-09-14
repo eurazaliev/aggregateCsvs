@@ -1,1 +1,1 @@
-./bin/console parse /var/www/tests/click/src/TestData
+./bin/console parse /var/www/tests/click/data/TestData

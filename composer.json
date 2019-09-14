@@ -15,7 +15,8 @@
     },
     "autoload": {
          "psr-4": {
-             "Console\\": "src"
+             "Console\\": "src",
+              "App\\Config\\": "config"
          },
          "classmap": ["src"]
      }

@@ -6,15 +6,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-
 use Symfony\Component\Finder\Finder;
+
+use App\Config\MainConfig as MainConfig;
 use Console\App\Helper\FilesIterator;
 use Console\App\Helper\FilesProcessor;
  
 class ParseCommand extends Command
 {
-    const CSVFILECAPTION = 'date; A; B; C';
-    const CSVFILEMASK = '*.csv';
     
     protected function configure()
     {
@@ -32,8 +31,8 @@ class ParseCommand extends Command
     {
         $path = $input->getArgument('path');
         
-        $fileNameMask = self::CSVFILEMASK;
-        $csvFileCaption = self::CSVFILECAPTION;
+        $fileNameMask = MainConfig::CSVFILEMASK;
+        $csvFileCaption = MainConfig::CSVFILECAPTION;
         
         $output->writeln('Ready to parse files in the: ' . $path);
 

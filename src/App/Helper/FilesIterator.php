@@ -26,6 +26,6 @@ class FilesIterator
 
     public function iterate()
     {
-            return new \NoRewindIterator($this->iterateText());
+        return new \NoRewindIterator($this->iterateText());
     }
 }

@@ -23,8 +23,6 @@ class CsvFilesAggregator
         $this->path = $path;
         $this->finder = $finder;
         $this->fileIterator = $fileIterator;
-        // выходную папку очищаем полностью от всего
-        $this->clearOutputDir();
     }
 
     public function setFileNameMask (string $fileNameMask) :self
@@ -79,6 +77,8 @@ class CsvFilesAggregator
             foreach ( $ri as $file ) {
                 $file->isDir() ?  rmdir($file) : unlink($file);
             }
+
+            return $this;
         }
         catch (Exception $ex) {
             throw new Exception($ex->getMessage());

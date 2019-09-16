@@ -44,7 +44,8 @@ class ParseCommand extends Command
                 $output->writeln('There was a problem to read source files or 
                 write aggregated data. Please check directories or permissions', $ex->getMessage());
         }
-        $csvFilesAggregator->setFileNameMask(MainConfig::CSVFILEMASK)
+        $csvFilesAggregator->clearOutputDir()
+                           ->setFileNameMask(MainConfig::CSVFILEMASK)
                            ->setCsvFileCaption(MainConfig::CSVFILECAPTION)
                            ->aggregateDatas();
 
@@ -52,10 +53,11 @@ class ParseCommand extends Command
         /** вторым этапом сгенерированные ранее файлы разбираем построчно и аггрегируем 
           * содержащиеся в них данные в выходной файл **/
         $resultProcessor  = new Processor(MainConfig::OUTDIR, new Finder, new FilesIterator);
-        $resultProcessor->setCsvFileCaption(MainConfig::CSVFILECAPTION)
+        $resultProcessor->clearResultFile()
+                        ->setCsvFileCaption(MainConfig::CSVFILECAPTION)
                         ->processResult();
 
-        //$csvFilesAggregator->clearOutputDir();
+        $csvFilesAggregator->clearOutputDir();
         $output->writeln('Complete.');
     }
 }

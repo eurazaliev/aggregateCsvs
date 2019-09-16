@@ -19,11 +19,7 @@ class Processor
     {
         $this->path = $path;
         $this->finder = $finder;
-        //$this->finder->files()->in($this->path);
         $this->fileIterator = $fileIterator;
-        if (file_exists(MainConfig::RESULTFILE)) {
-            unlink(MainConfig::RESULTFILE);
-        }
     }
 
     public function setCsvFileCaption (string $csvFileCaption) :self
@@ -35,6 +31,7 @@ class Processor
     /** а в этой функции просто итеративно парсим
       * аггрегированные по дате файлы, суммируем результат и кладем в выходной файл
       * сколько бы файлов у нас небыло, перебираем итератором - память не кончается  **/
+
     public function processResult()
     {
         $this->finder->files()->in($this->path);
@@ -50,6 +47,15 @@ class Processor
             $aggregatedString = implode(MainConfig::DIVIDER . ' ', $this->aggregateFileData($file));
             file_put_contents(MainConfig::RESULTFILE, $aggregatedString . PHP_EOL, FILE_APPEND | LOCK_EX);
         }
+    }
+
+    public function clearResultFile() : self
+    {
+        if (file_exists(MainConfig::RESULTFILE)) {
+            unlink(MainConfig::RESULTFILE);
+        }
+
+        return $this;
     }
 
     protected function aggregateFileData($file) : array
@@ -71,7 +77,8 @@ class Processor
                     $dateStr['C'] += floatval($pieces[3]);
                 }
             }
+
             return $dateStr;
-        
     }
+    
 }

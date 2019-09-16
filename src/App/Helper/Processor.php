@@ -19,6 +19,7 @@ class Processor
     {
         $this->path = $path;
         $this->finder = $finder;
+        //$this->finder->files()->in($this->path);
         $this->fileIterator = $fileIterator;
         if (file_exists(MainConfig::RESULTFILE)) {
             unlink(MainConfig::RESULTFILE);
@@ -28,7 +29,6 @@ class Processor
     public function setCsvFileCaption (string $csvFileCaption) :self
     {
         $this->csvFileCaption = $csvFileCaption;
-        $this->finder->files()->contains($this->csvFileCaption);
         return $this;
     }
 
@@ -37,11 +37,7 @@ class Processor
       * сколько бы файлов у нас небыло, перебираем итератором - память не кончается  **/
     public function processResult()
     {
-        $this->finder = new Finder;
-
-        $this->path = MainConfig::OUTDIR;
         $this->finder->files()->in($this->path);
-
         isset($this->csvFileCaption)
             ? file_put_contents(MainConfig::RESULTFILE,
                  $this->csvFileCaption . PHP_EOL, FILE_APPEND | LOCK_EX)

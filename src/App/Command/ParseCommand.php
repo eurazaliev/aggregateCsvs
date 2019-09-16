@@ -33,9 +33,6 @@ class ParseCommand extends Command
     {
         $path = $input->getArgument('path');
         
-        $fileNameMask = MainConfig::CSVFILEMASK;
-        $csvFileCaption = MainConfig::CSVFILECAPTION;
-        
         $output->writeln('Ready to parse files in the: ' . $path);
 
         /** делаем в два этапа. вначале исходные файлы разбираем построчно и из строк
@@ -47,18 +44,18 @@ class ParseCommand extends Command
                 $output->writeln('There was a problem to read source files or 
                 write aggregated data. Please check directories or permissions', $ex->getMessage());
         }
-        $csvFilesAggregator->setFileNameMask($fileNameMask)
-                           ->setCsvFileCaption($csvFileCaption)
+        $csvFilesAggregator->setFileNameMask(MainConfig::CSVFILEMASK)
+                           ->setCsvFileCaption(MainConfig::CSVFILECAPTION)
                            ->aggregateDatas();
 
 
         /** вторым этапом сгенерированные ранее файлы разбираем построчно и аггрегируем 
           * содержащиеся в них данные в выходной файл **/
-        $resultProcessor  = new Processor($path, new Finder(), new FilesIterator);
-        $resultProcessor->setCsvFileCaption($csvFileCaption)
+        $resultProcessor  = new Processor(MainConfig::OUTDIR, new Finder, new FilesIterator);
+        $resultProcessor->setCsvFileCaption(MainConfig::CSVFILECAPTION)
                         ->processResult();
 
-        $csvFilesAggregator->clearOutputDir();
+        //$csvFilesAggregator->clearOutputDir();
         $output->writeln('Complete.');
     }
 }

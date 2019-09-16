@@ -51,6 +51,13 @@ class Processor
         foreach ($this->finder as $file) {
             /** файлик может быть большим, поэтому его тоже итерируем построчно,
               * а не читаем целиком в память **/
+            $aggregatedString = implode(MainConfig::DIVIDER . ' ', $this->aggregateFileData($file));
+            file_put_contents(MainConfig::RESULTFILE, $aggregatedString . PHP_EOL, FILE_APPEND | LOCK_EX);
+        }
+    }
+
+    protected function aggregateFileData($file) : array
+    {
             $this->fileIterator->setFile($file);
             $iterator = $this->fileIterator->iterate();
 
@@ -68,9 +75,7 @@ class Processor
                     $dateStr['C'] += floatval($pieces[3]);
                 }
             }
-            // аггрегированные данные преобразую в строку и отправляю в результирующий файл
-            $aggregatedString = implode(MainConfig::DIVIDER . ' ', $dateStr);
-            file_put_contents(MainConfig::RESULTFILE, $aggregatedString . PHP_EOL, FILE_APPEND | LOCK_EX);
-        }
+            return $dateStr;
+        
     }
 }

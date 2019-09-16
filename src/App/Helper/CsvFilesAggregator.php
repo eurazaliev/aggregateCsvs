@@ -71,7 +71,7 @@ class CsvFilesAggregator
     }
 
     // рекурсивно очищаем директорию от всего содержимого
-    private function clearOutputDir ()
+    public function clearOutputDir ()
     {
         $di = new \RecursiveDirectoryIterator(MainConfig::OUTDIR, \FilesystemIterator::SKIP_DOTS);
         $ri = new \RecursiveIteratorIterator($di, \RecursiveIteratorIterator::CHILD_FIRST);

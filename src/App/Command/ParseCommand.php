@@ -55,9 +55,10 @@ class ParseCommand extends Command
         /** вторым этапом сгенерированные ранее файлы разбираем построчно и аггрегируем 
           * содержащиеся в них данные в выходной файл **/
         $resultProcessor  = new Processor($path, new Finder(), new FilesIterator);
-        $resultProcessor->setCsvFileCaption($csvFileCaption);
+        $resultProcessor->setCsvFileCaption($csvFileCaption)
                         ->processResult();
 
+        $csvFilesAggregator->clearOutputDir();
         $output->writeln('Complete.');
     }
 }

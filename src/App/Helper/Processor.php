@@ -56,13 +56,12 @@ class Processor
     public function processResult()
     {
         $this->finder = Finder::create()->files()->in($this->path);
-        isset($this->csvFileCaption)
-            ? file_put_contents(MainConfig::RESULTFILE,
-                 $this->csvFileCaption . PHP_EOL, FILE_APPEND | LOCK_EX)
-        : null;
-        
-
-        if (!$fileHandle = fopen(MainConfig::RESULTFILE, 'a')) throw new Exception;
+        if (!$fileHandle = fopen(MainConfig::RESULTFILE, 'a')) {
+            throw new Exception("Could not write result");
+        }
+        if (isset($this->csvFileCaption)) {
+             fwrite($fileHandle, $this->csvFileCaption . PHP_EOL);
+        }
         // у меня в кажом итерируемом файле находятся строки данных в соответствии с датой
         foreach ($this->finder as $file) {
             /** файлик может быть большим, поэтому его тоже итерируем построчно,

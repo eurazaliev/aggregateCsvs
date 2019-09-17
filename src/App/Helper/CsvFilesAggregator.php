@@ -18,21 +18,27 @@ class CsvFilesAggregator
     protected $csvFileCaption;
     protected $fileIterator;
 
-    public function __construct(string $path, Finder $finder, \Console\App\Helper\FilesIterator $fileIterator)
+    public function __construct(Finder $finder, \Console\App\Helper\FilesIterator $fileIterator)
     {
-        $this->path = $path;
         $this->finder = $finder;
         $this->fileIterator = $fileIterator;
     }
 
-    public function setFileNameMask (string $fileNameMask) :self
+    public function setPath(string $path) :self
+    {
+        $this->path = $path;
+        return $this;
+    }
+
+
+    public function setFileNameMask(string $fileNameMask) :self
     {
         $this->fileNameMask = $fileNameMask;
         $this->finder->files()->name($this->fileNameMask);
         return $this;
     }
 
-    public function setCsvFileCaption (string $csvFileCaption) :self
+    public function setCsvFileCaption(string $csvFileCaption) :self
     {
         $this->csvFileCaption = $csvFileCaption;
         $this->finder->files()->contains($this->csvFileCaption);
@@ -45,14 +51,14 @@ class CsvFilesAggregator
     public function aggregateDatas() 
     {
         $this->finder->ignoreVCS(true);
-        $this->finder->files()->in($this->path);
+        //$this->finder->files()->in($this->path);
+        $this->finder = Finder::create()->files()->in($this->path);
 
         foreach ($this->finder as $file) {
             try {
                 // исходный файл с данными может быть большим, проходим итератором
                 $this->fileIterator->setFile($file);
                 $iterator = $this->fileIterator->iterate();
-                $counter = 0;
                 foreach ($iterator as $line) {
                     // берем только строки, удовлетворяющие нашему паттерну YYYY-mm-dd; A; B; C
                     if (preg_match(MainConfig::REGEXP, $line)) { 

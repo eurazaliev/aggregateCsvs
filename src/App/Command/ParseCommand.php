@@ -1,6 +1,7 @@
 <?php
 namespace Console\App\Command;
  
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -16,6 +17,16 @@ use Console\App\Helper\Processor;
  
 class ParseCommand extends Command
 {
+    protected $finder;
+    protected $aggregator;
+    protected $processor;
+
+    public function __construct(CsvFilesAggregator $aggregator, Processor $processor)
+    {
+        $this->aggregator = $aggregator;
+        $this->processor = $processor;
+        parent::__construct();
+    }
 
     protected function configure()
     {
@@ -32,32 +43,30 @@ class ParseCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = $input->getArgument('path');
-        
         $output->writeln('Ready to parse files in the: ' . $path);
-
         /** делаем в два этапа. вначале исходные файлы разбираем построчно и из строк
           * формируем предварительные файлы, содержащие данные на определенную дату **/
+
         try {
-            $csvFilesAggregator  = new CsvFilesAggregator($path, new Finder, new FilesIterator);
+            $this->aggregator->clearOutputDir()
+                              ->setPath($path)
+                              ->setFileNameMask(MainConfig::CSVFILEMASK)
+                              ->setCsvFileCaption(MainConfig::CSVFILECAPTION)
+                              ->aggregateDatas();
+
+
+            /** вторым этапом сгенерированные ранее файлы разбираем построчно и аггрегируем 
+              * содержащиеся в них данные в выходной файл **/
+            $this->processor->clearResultFile()
+                            ->setPath(MainConfig::OUTDIR)
+                            ->setCsvFileCaption(MainConfig::CSVFILECAPTION)
+                            ->processResult();
+            $this->aggregator->clearOutputDir();
         }
         catch (Exception $ex) {
                 $output->writeln('There was a problem to read source files or 
                 write aggregated data. Please check directories or permissions', $ex->getMessage());
         }
-        $csvFilesAggregator->clearOutputDir()
-                           ->setFileNameMask(MainConfig::CSVFILEMASK)
-                           ->setCsvFileCaption(MainConfig::CSVFILECAPTION)
-                           ->aggregateDatas();
-
-
-        /** вторым этапом сгенерированные ранее файлы разбираем построчно и аггрегируем 
-          * содержащиеся в них данные в выходной файл **/
-        $resultProcessor  = new Processor(MainConfig::OUTDIR, new Finder, new FilesIterator);
-        $resultProcessor->clearResultFile()
-                        ->setCsvFileCaption(MainConfig::CSVFILECAPTION)
-                        ->processResult();
-
-        $csvFilesAggregator->clearOutputDir();
         $output->writeln('Complete.');
     }
 }

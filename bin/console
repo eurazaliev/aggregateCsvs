@@ -2,11 +2,38 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Console\Application;
+
+use Symfony\Component\Finder\Finder;
+
 use Console\App\Command\ParseCommand;
 
+$container = new ContainerBuilder();
+$container->register('Finder', 'Symfony\Component\Finder\Finder');
+
+$container->register('FilesIterator', 'Console\App\Helper\FilesIterator');
+
+$container
+    ->register('CsvFilesAggregator', 'Console\App\Helper\CsvFilesAggregator')
+    ->addArgument(new Reference('Finder'))
+    ->addArgument(new Reference('FilesIterator'));;
+
+$container
+    ->register('Processor', 'Console\App\Helper\Processor')
+    ->addArgument(new Reference('Finder'))
+    ->addArgument(new Reference('FilesIterator'));;
+
+$container
+    ->register('ParseCommand', 'Console\App\Command\ParseCommand')
+    ->addArgument(new Reference('CsvFilesAggregator'))
+    ->addArgument(new Reference('Processor'));
+
+$parseCommand = $container->get('ParseCommand');
+
 $app = new Application();
-$app->add(new ParseCommand());
+$app->add($parseCommand);
 
 $app->run();
 

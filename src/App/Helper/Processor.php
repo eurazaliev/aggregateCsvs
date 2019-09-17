@@ -15,9 +15,8 @@ class Processor
     protected $csvFileCaption;
     protected $fileIterator;
 
-    public function __construct(string $path, Finder $finder, \Console\App\Helper\FilesIterator $fileIterator)
+    public function __construct(Finder $finder, \Console\App\Helper\FilesIterator $fileIterator)
     {
-        $this->path = $path;
         $this->finder = $finder;
         $this->fileIterator = $fileIterator;
     }
@@ -28,13 +27,19 @@ class Processor
         return $this;
     }
 
+    public function setPath (string $path) :self
+    {
+        $this->path = $path;
+        return $this;
+    }
+
     /** а в этой функции просто итеративно парсим
       * аггрегированные по дате файлы, суммируем результат и кладем в выходной файл
       * сколько бы файлов у нас небыло, перебираем итератором - память не кончается  **/
 
     public function processResult()
     {
-        $this->finder->files()->in($this->path);
+        $this->finder = Finder::create()->files()->in($this->path);
         isset($this->csvFileCaption)
             ? file_put_contents(MainConfig::RESULTFILE,
                  $this->csvFileCaption . PHP_EOL, FILE_APPEND | LOCK_EX)

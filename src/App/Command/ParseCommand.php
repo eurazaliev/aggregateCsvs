@@ -48,7 +48,8 @@ class ParseCommand extends Command
           * формируем предварительные файлы, содержащие данные на определенную дату **/
 
         try {
-            $this->aggregator->clearOutputDir()
+            $this->aggregator->setOutDir(MainConfig::OUTDIR)
+                              ->clearOutputDir()
                               ->setPath($path)
                               ->setFileNameMask(MainConfig::CSVFILEMASK)
                               ->setCsvFileCaption(MainConfig::CSVFILECAPTION)

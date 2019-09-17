@@ -1,6 +1,7 @@
 <?php
 namespace Console\App\Helper;
 
+use Exception;
 use Symfony\Component\Finder\Finder as Finder;
 use App\Config\MainConfig as MainConfig;
 
@@ -17,6 +18,7 @@ class CsvFilesAggregator
     protected $finder;
     protected $csvFileCaption;
     protected $fileIterator;
+    protected $outDir;
 
     public function __construct(Finder $finder, \Console\App\Helper\FilesIterator $fileIterator)
     {
@@ -26,8 +28,17 @@ class CsvFilesAggregator
 
     public function setPath(string $path) :self
     {
+        if (!is_dir($path)) {
+            throw new Exception("Path not found or inacceptable");
+        }
         $this->path = $path;
+
         return $this;
+    }
+
+    public function getPath(): ?string
+    {
+        return $this->path;
     }
 
 
@@ -35,14 +46,43 @@ class CsvFilesAggregator
     {
         $this->fileNameMask = $fileNameMask;
         $this->finder->files()->name($this->fileNameMask);
+
         return $this;
     }
+
+    public function getFileNameMask(): ?string
+    {
+        return $this->fileNameMask;
+    }
+
+    public function setOutDir(string $outDir) :self
+    {
+        if (!is_dir($outDir)) {
+            throw new Exception("Path not found or inacceptable");
+        }
+        $this->outDir = $outDir;
+
+        return $this;
+    }
+
+    public function getOutDir(): ?string
+    {
+        return $this->outDir;
+    }
+
 
     public function setCsvFileCaption(string $csvFileCaption) :self
     {
         $this->csvFileCaption = $csvFileCaption;
         $this->finder->files()->contains($this->csvFileCaption);
+
         return $this;
+    }
+
+
+    public function getCsvFileCaption(): ?string
+    {
+        return $this->csvFileCaption;
     }
 
     /** итеративно перебираем все входные файлы.
@@ -64,20 +104,23 @@ class CsvFilesAggregator
                     if (preg_match(MainConfig::REGEXP, $line)) { 
                         $pieces = explode(MainConfig::DIVIDER, $line);
                         // и найденные данные в зависимости от даты кладем в тот или иной файл
-                        file_put_contents(MainConfig::OUTDIR . $pieces[0], $line , FILE_APPEND | LOCK_EX);
+                        file_put_contents($this->outDir . $pieces[0], $line , FILE_APPEND | LOCK_EX);
                     }
                 }
+
             }
             catch (Exception $ex) {
                 throw new Exception($ex->getMessage());
             }
         }
+
+        return $this;
     }
 
     // рекурсивно очищаем директорию от всего содержимого
     public function clearOutputDir ()
     {
-        $di = new \RecursiveDirectoryIterator(MainConfig::OUTDIR, \FilesystemIterator::SKIP_DOTS);
+        $di = new \RecursiveDirectoryIterator($this->outDir, \FilesystemIterator::SKIP_DOTS);
         $ri = new \RecursiveIteratorIterator($di, \RecursiveIteratorIterator::CHILD_FIRST);
         try {
             foreach ( $ri as $file ) {

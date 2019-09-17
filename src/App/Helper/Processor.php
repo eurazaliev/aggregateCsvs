@@ -1,6 +1,7 @@
 <?php
 namespace Console\App\Helper;
 
+use Exception;
 use Symfony\Component\Finder\Finder as Finder;
 use App\Config\MainConfig as MainConfig;
 
@@ -27,11 +28,26 @@ class Processor
         return $this;
     }
 
+    public function getCsvFileCaption(): ?string
+    {
+        return $this->csvFileCaption;
+    }
+
     public function setPath (string $path) :self
     {
+        if (!is_dir($path)) {
+            throw new Exception("Path not found or inacceptable");
+        }
+
         $this->path = $path;
         return $this;
     }
+
+    public function getPath(): ?string
+    {
+        return $this->path;
+    }
+
 
     /** а в этой функции просто итеративно парсим
       * аггрегированные по дате файлы, суммируем результат и кладем в выходной файл
@@ -52,6 +68,8 @@ class Processor
             $aggregatedString = implode(MainConfig::DIVIDER . ' ', $this->aggregateFileData($file));
             file_put_contents(MainConfig::RESULTFILE, $aggregatedString . PHP_EOL, FILE_APPEND | LOCK_EX);
         }
+
+        return $this;
     }
 
     public function clearResultFile() : self

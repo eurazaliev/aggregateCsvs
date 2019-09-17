@@ -1,6 +1,8 @@
 <?php
 namespace Console\App\Helper;
 
+use Exception;
+
 class FilesIterator
 {
     // получаем файл, отдаю простой итератор
@@ -12,6 +14,8 @@ class FilesIterator
             throw new Exception("File not found");
         }
         $this->file = new \SplFileObject($filename, $mode);
+        
+        return $this;
     }
 
     protected function iterateText()

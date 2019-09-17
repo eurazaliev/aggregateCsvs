@@ -103,8 +103,10 @@ class CsvFilesAggregator
                     // берем только строки, удовлетворяющие нашему паттерну YYYY-mm-dd; A; B; C
                     if (preg_match(MainConfig::REGEXP, $line)) { 
                         $pieces = explode(MainConfig::DIVIDER, $line);
+                        if (!$fileHandle = fopen($this->outDir . $pieces[0], 'a')) throw new Exception;
                         // и найденные данные в зависимости от даты кладем в тот или иной файл
-                        file_put_contents($this->outDir . $pieces[0], $line , FILE_APPEND | LOCK_EX);
+                        //file_put_contents($this->outDir . $pieces[0], $line , FILE_APPEND | LOCK_EX);
+                        fwrite($fileHandle, $line);
                     }
                 }
 

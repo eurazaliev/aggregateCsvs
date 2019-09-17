@@ -23,7 +23,7 @@ $container
 $container
     ->register('Processor', 'Console\App\Helper\Processor')
     ->addArgument(new Reference('Finder'))
-    ->addArgument(new Reference('FilesIterator'));;
+    ->addArgument(new Reference('FilesIterator'));
 
 $container
     ->register('ParseCommand', 'Console\App\Command\ParseCommand')

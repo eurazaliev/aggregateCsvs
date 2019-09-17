@@ -60,14 +60,17 @@ class Processor
             ? file_put_contents(MainConfig::RESULTFILE,
                  $this->csvFileCaption . PHP_EOL, FILE_APPEND | LOCK_EX)
         : null;
+        
 
+        if (!$fileHandle = fopen(MainConfig::RESULTFILE, 'a')) throw new Exception;
         // у меня в кажом итерируемом файле находятся строки данных в соответствии с датой
         foreach ($this->finder as $file) {
             /** файлик может быть большим, поэтому его тоже итерируем построчно,
               * а не читаем целиком в память **/
             $aggregatedString = implode(MainConfig::DIVIDER . ' ', $this->aggregateFileData($file));
-            file_put_contents(MainConfig::RESULTFILE, $aggregatedString . PHP_EOL, FILE_APPEND | LOCK_EX);
+            fwrite($fileHandle, $aggregatedString . PHP_EOL);
         }
+        fclose($fileHandle);
 
         return $this;
     }

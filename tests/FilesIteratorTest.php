@@ -17,7 +17,7 @@ class FileIteratorTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf('Console\App\Helper\FilesIterator', $filesIterator);
 
         $this->expectException(Exception::class);
-        $filesIterator->setFile('ololo');
+        $filesIterator->setFile('ololo2');
 
         $testFile = glob(__DIR__ . '/*.*')[array_rand(glob(__DIR__ . '/*.*'))];
         $this->assertInstanceOf('Console\App\Helper\FilesIterator', $filesIterator->setFile($testFile));

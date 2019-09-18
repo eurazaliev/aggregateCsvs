@@ -80,6 +80,10 @@ class ProcessorTest extends \PHPUnit\Framework\TestCase
     {
         $processor = new Console\App\Helper\Processor($this->finder, $this->filesIterator);
         $this->assertInstanceOf('Console\App\Helper\Processor', $processor->clearResultFile());
+        
+        $this->expectException(Exception::class);
+        $this->assertInstanceOf('Console\App\Helper\Processor', $processor->processResult());
+
         $this->assertInstanceOf('Console\App\Helper\Processor', $processor->setPath(__DIR__));
         $this->assertInstanceOf('Console\App\Helper\Processor', $processor->processResult());
         $this->expectException(Exception::class);

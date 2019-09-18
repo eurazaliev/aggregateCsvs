@@ -83,10 +83,11 @@ class CsvFilesAggregatorTest extends \PHPUnit\Framework\TestCase
     {
         $csvFilesAggregator = new Console\App\Helper\CsvFilesAggregator($this->finder, $this->filesIterator);
         $this->assertInstanceOf('Console\App\Helper\CsvFilesAggregator', $csvFilesAggregator);
+        $this->expectException(Exception::class);
+        $this->assertInstanceOf('Console\App\Helper\CsvFilesAggregator', $csvFilesAggregator->aggregateDatas());
 
         $this->assertInstanceOf('Console\App\Helper\CsvFilesAggregator', $csvFilesAggregator->setPath(__DIR__));
-
-        //$this->assertInstanceOf('Console\App\Helper\CsvFilesAggregator', $csvFilesAggregator->aggregateDatas());
+        $this->assertInstanceOf('Console\App\Helper\CsvFilesAggregator', $csvFilesAggregator->aggregateDatas());
 
         $this->expectException(Exception::class);
         $csvFilesAggregator->setPath('ololo');

@@ -90,8 +90,10 @@ class CsvFilesAggregator
       * в соответствии с датами событий **/
     public function aggregateDatas() 
     {
+        if (!isset($this->path)) {
+            throw new Exception ("Could not process result, path to the data have been not set");
+        }
         $this->finder->ignoreVCS(true);
-        //$this->finder->files()->in($this->path);
         $this->finder = Finder::create()->files()->in($this->path);
 
         foreach ($this->finder as $file) {

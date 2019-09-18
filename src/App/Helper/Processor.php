@@ -55,6 +55,9 @@ class Processor
 
     public function processResult()
     {
+        if (!isset($this->path)) {
+            throw new Exception ("Could not process result, path to the data have been not set");
+        }
         $this->finder = Finder::create()->files()->in($this->path);
         if (!$fileHandle = fopen(MainConfig::RESULTFILE, 'a')) {
             throw new Exception("Could not write result");

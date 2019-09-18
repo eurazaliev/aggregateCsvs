@@ -65,8 +65,8 @@ class ParseCommand extends Command
             $this->aggregator->clearOutputDir();
         }
         catch (Exception $ex) {
-                $output->writeln('There was a problem to read source files or 
-                write aggregated data. Please check directories or permissions', $ex->getMessage());
+                $output->writeln("There was a problem to read source files or 
+                write aggregated data. Please check directories or permissions: {$ex->getMessage()}");
         }
         $output->writeln('Complete.');
     }

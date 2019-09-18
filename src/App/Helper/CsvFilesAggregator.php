@@ -54,6 +54,15 @@ class CsvFilesAggregator
         $this->fileIterator = $fileIterator;
     }
 
+    /**
+     * Sets the path to the source files.
+     *
+     * @param string $path
+     *
+     * @return self
+     *
+     * @throws Exception
+     */
     public function setPath(string $path) :self
     {
         if (!is_dir($path)) {
@@ -64,12 +73,21 @@ class CsvFilesAggregator
         return $this;
     }
 
+    /**
+     * @return string|path
+     */
     public function getPath(): ?string
     {
         return $this->path;
     }
 
-
+    /**
+     * Sets the file mask to match the source files.
+     *
+     * @param string $fileNameMask
+     *
+     * @return self
+     */
     public function setFileNameMask(string $fileNameMask) :self
     {
         $this->fileNameMask = $fileNameMask;
@@ -78,11 +96,23 @@ class CsvFilesAggregator
         return $this;
     }
 
+    /**
+     * @return string|fileNameMask
+     */
     public function getFileNameMask(): ?string
     {
         return $this->fileNameMask;
     }
 
+    /**
+     * Sets the path to the output files
+     *
+     * @param string $outDir
+     *
+     * @return self
+     *
+     * @throws Exception
+     */
     public function setOutDir(string $outDir) :self
     {
         if (!is_dir($outDir)) {
@@ -93,12 +123,21 @@ class CsvFilesAggregator
         return $this;
     }
 
+    /**
+     * @return string|outDir
+     */
     public function getOutDir(): ?string
     {
         return $this->outDir;
     }
 
-
+    /**
+     * Sets the files caption that have to contain the source files to be processed
+     *
+     * @param string $csvFileCaption
+     *
+     * @return self
+     */
     public function setCsvFileCaption(string $csvFileCaption) :self
     {
         $this->csvFileCaption = $csvFileCaption;
@@ -107,15 +146,20 @@ class CsvFilesAggregator
         return $this;
     }
 
-
+    /**
+     * @return string|csvFileCaption
+     */
     public function getCsvFileCaption(): ?string
     {
         return $this->csvFileCaption;
     }
 
     /** итеративно перебираем все входные файлы.
-      * найденные интересующие нас строки раскладываем по разым файлам 
-      * в соответствии с датами событий **/
+     * найденные интересующие нас строки раскладываем по разым файлам 
+     * в соответствии с датами событий 
+     *
+     * @return self
+     */
     public function aggregateDatas() 
     {
         if (!isset($this->path)) {
@@ -150,7 +194,10 @@ class CsvFilesAggregator
         return $this;
     }
 
-    // рекурсивно очищаем директорию от всего содержимого
+    /* рекурсивно очищаем директорию от всего содержимого
+     *
+     * @return self
+     */
     public function clearOutputDir ()
     {
         $di = new \RecursiveDirectoryIterator($this->outDir, \FilesystemIterator::SKIP_DOTS);

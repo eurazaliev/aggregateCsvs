@@ -31,23 +31,46 @@ class Processor
      */
     protected $fileIterator;
 
+    /**
+     * @param object $finder Symfony component
+     * @param object $filesIterator Console\App\Helper\FilesIterator
+     */
     public function __construct(Finder $finder, \Console\App\Helper\FilesIterator $fileIterator)
     {
         $this->finder = $finder;
         $this->fileIterator = $fileIterator;
     }
 
+    /**
+     * Sets the files caption that should be added in the top of output file
+     *
+     * @param string $csvFileCaption
+     *
+     * @return self
+     */
     public function setCsvFileCaption (string $csvFileCaption) :self
     {
         $this->csvFileCaption = $csvFileCaption;
         return $this;
     }
 
+    /**
+     * @return string|csvFileCaption
+     */
     public function getCsvFileCaption(): ?string
     {
         return $this->csvFileCaption;
     }
 
+    /**
+     * Sets the path to the source files.
+     *
+     * @param string $path
+     *
+     * @return self
+     *
+     * @throws Exception
+     */
     public function setPath (string $path) :self
     {
         if (!is_dir($path)) {
@@ -58,6 +81,9 @@ class Processor
         return $this;
     }
 
+    /**
+     * @return string|path
+     */
     public function getPath(): ?string
     {
         return $this->path;
@@ -65,9 +91,12 @@ class Processor
 
 
     /** а в этой функции просто итеративно парсим
-      * аггрегированные по дате файлы, суммируем результат и кладем в выходной файл
-      * сколько бы файлов у нас небыло, перебираем итератором - память не кончается  **/
-
+     * аггрегированные по дате файлы, суммируем результат и кладем в выходной файл
+     * сколько бы файлов у нас небыло, перебираем итератором - память не кончается  
+     *
+     * @return self
+     *
+     */
     public function processResult()
     {
         if (!isset($this->path)) {
@@ -92,6 +121,11 @@ class Processor
         return $this;
     }
 
+    /** удаляем результирующий файл
+     *
+     * @return self
+     *
+     */
     public function clearResultFile() : self
     {
         if (file_exists(MainConfig::RESULTFILE)) {
@@ -101,6 +135,12 @@ class Processor
         return $this;
     }
 
+    /** итерируем найденный файл, в случае если данные соответствуют требуемой маске
+     *  делаем обработку и отдаем в виде массива
+     *
+     * @return array
+     *
+     */
     protected function aggregateFileData($file) : array
     {
             $this->fileIterator->setFile($file);

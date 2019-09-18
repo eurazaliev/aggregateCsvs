@@ -8,16 +8,40 @@ use App\Config\MainConfig as MainConfig;
 class CsvFilesAggregator
 {
     /** этот класс делает важную задачу: итеративно проходит по всем файлам 
-      * (или если указана маска $this->setMask и(или) заголовок файла $this->setCsvFileCaption по определенным файлам)
-      * по указанному пути. а на выходе в указанную директорию складывает файлы, содержащие данные по найденной дате
-      * я не проверяю тут, что первое поле содержит только корректную дату и считаю, что так .. если это требуется, можно
-      * доделать. **/
-    
+     * (или если указана маска $this->setMask и(или) заголовок файла $this->setCsvFileCaption по определенным файлам)
+     * по указанному пути. а на выходе в указанную директорию складывает файлы, содержащие данные по найденной дате
+     * я не проверяю тут, что первое поле содержит только корректную дату и считаю, что так .. если это требуется, можно
+     * доделать. 
+     */
+
+    /**
+     * @path string where the source files stored
+     */
     protected $path;
+
+    /**
+     * @fileNameMask string file mask to process those files that match the mask set
+     */
     protected $fileNameMask;
+
+    /**
+     * @findet object Symfony Finder
+     */
     protected $finder;
+
+    /**
+     * @csvFileCaption string caption that have to be added int the top of output files
+     */
     protected $csvFileCaption;
+
+    /**
+     * @aggregator object Console\App\Helper\FilesIterator
+     */
     protected $fileIterator;
+
+    /**
+     * @outDir string the path where output files should be placed
+     */
     protected $outDir;
 
     public function __construct(Finder $finder, \Console\App\Helper\FilesIterator $fileIterator)

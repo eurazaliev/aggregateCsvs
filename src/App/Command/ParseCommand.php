@@ -17,10 +17,25 @@ use Console\App\Helper\Processor;
  
 class ParseCommand extends Command
 {
+    /**
+     * @finder Object Symfony Finder component
+     */
     protected $finder;
+
+    /**
+     * @aggregator object Console\App\Helper\CsvFilesAggregator
+     */
     protected $aggregator;
+
+    /**
+     * @processor Object Console\App\Helper\Processor
+     */
     protected $processor;
 
+    /**
+     * @param object $aggregator Console\App\Helper\CsvFilesAggregator
+     * @param object $processor Console\App\Helper\CsvFilesProcessor
+     */
     public function __construct(CsvFilesAggregator $aggregator, Processor $processor)
     {
         $this->aggregator = $aggregator;

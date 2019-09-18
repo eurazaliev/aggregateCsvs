@@ -6,6 +6,10 @@ use Exception;
 class FilesIterator
 {
     // получаем файл, отдаю простой итератор
+
+    /**
+     * @file string path to the file to read data
+     */
     protected $file;
 
     public function setFile($filename, $mode = "r")
@@ -14,7 +18,7 @@ class FilesIterator
             throw new Exception("File not found");
         }
         $this->file = new \SplFileObject($filename, $mode);
-        
+
         return $this;
     }
 
@@ -25,6 +29,7 @@ class FilesIterator
             yield $this->file->fgets();
             $count++;
         }
+
         return $count;
     }
 

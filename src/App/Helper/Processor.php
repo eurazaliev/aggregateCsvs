@@ -11,9 +11,24 @@ class Processor
       * формирует выходной файл, как требует задача
       * ниже конструктор, 2 сеттера и основной метод **/
 
+    /**
+     * @path string where the source files stored
+     */
     protected $path;
+
+    /**
+     * @findet object Symfony Finder
+     */
     protected $finder;
+
+    /**
+     * @csvFileCaption string caption that have to be added int the top of output files
+     */
     protected $csvFileCaption;
+
+    /**
+     * @aggregator object Console\App\Helper\FilesIterator
+     */
     protected $fileIterator;
 
     public function __construct(Finder $finder, \Console\App\Helper\FilesIterator $fileIterator)

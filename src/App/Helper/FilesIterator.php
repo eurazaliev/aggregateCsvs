@@ -8,7 +8,7 @@ class FilesIterator
     // получаем файл, отдаю простой итератор
 
     /**
-     * @file string path to the file to read data
+     * @var string path to the file to read data
      */
     protected $file;
 

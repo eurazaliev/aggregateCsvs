@@ -15,35 +15,39 @@ class CsvFilesAggregator
      */
 
     /**
-     * @path string where the source files stored
+     * @var string where the source files stored
      */
     protected $path;
 
     /**
-     * @fileNameMask string file mask to process those files that match the mask set
+     * @var string file mask to process those files that match the mask set
      */
     protected $fileNameMask;
 
     /**
-     * @findet object Symfony Finder
+     * @var object Symfony Finder
      */
     protected $finder;
 
     /**
-     * @csvFileCaption string caption that have to be added int the top of output files
+     * @var string caption that have to be added int the top of output files
      */
     protected $csvFileCaption;
 
     /**
-     * @aggregator object Console\App\Helper\FilesIterator
+     * @var object Console\App\Helper\FilesIterator
      */
     protected $fileIterator;
 
     /**
-     * @outDir string the path where output files should be placed
+     * @var string the path where output files should be placed
      */
     protected $outDir;
 
+    /**
+     * @param object $finder Symfony component
+     * @param object $filesIterator Console\App\Helper\FilesIterator
+     */
     public function __construct(Finder $finder, \Console\App\Helper\FilesIterator $fileIterator)
     {
         $this->finder = $finder;

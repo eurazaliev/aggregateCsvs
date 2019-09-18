@@ -12,22 +12,22 @@ class Processor
       * ниже конструктор, 2 сеттера и основной метод **/
 
     /**
-     * @path string where the source files stored
+     * @var string where the source files stored
      */
     protected $path;
 
     /**
-     * @findet object Symfony Finder
+     * @var object Symfony Finder
      */
     protected $finder;
 
     /**
-     * @csvFileCaption string caption that have to be added int the top of output files
+     * @var string caption that have to be added int the top of output files
      */
     protected $csvFileCaption;
 
     /**
-     * @aggregator object Console\App\Helper\FilesIterator
+     * @var object Console\App\Helper\FilesIterator
      */
     protected $fileIterator;
 
